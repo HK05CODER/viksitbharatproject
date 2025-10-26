@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Welcome Page</title>
+<link rel="stylesheet" href="index_style.css">
+</head>
+<body>
+
+<div class="container">
+    <h1>Welcome to Our Website</h1>
+    <button class="btn btn-login" onclick="openLogin()">Login</button>
+    <button class="btn btn-signup" onclick="openSignup()">Sign Up</button>
+</div>
+
+<!-- Sign Up Modal -->
+<div class="modal" id="signupModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeSignup()">&times;</span>
+        <h2>Sign Up</h2>
+        <label>Name:</label>
+        <input type="text" id="signupName" placeholder="Enter full name">
+        <label>Email:</label>
+        <input type="email" id="signupEmail" placeholder="Enter email">
+        <label>Phone Number:</label>
+        <input type="text" id="signupPhone" placeholder="Enter phone number">
+        <label>Username:</label>
+        <input type="text" id="signupUsername" placeholder="Enter username">
+        <label>Password:</label>
+        <input type="password" id="signupPassword" placeholder="Enter password">
+        <label>Role:</label>
+        <select id="signupRole">
+            <option value="">Select Role</option>
+            <option value="manufacturer">Manufacturer</option>
+            <option value="retailer">Retailer</option>
+        </select>
+        <button onclick="signupUser()">Submit</button>
+    </div>
+</div>
+
+<!-- Login Modal -->
+<div class="modal" id="loginModal">
+    <div class="modal-content">
+        <span class="close-btn" onclick="closeLogin()">&times;</span>
+        <h2>Login</h2>
+        <label>Username:</label>
+        <input type="text" id="loginUsername" placeholder="Enter username">
+        <label>Password:</label>
+        <input type="password" id="loginPassword" placeholder="Enter password">
+        <button onclick="loginUser()">Login</button>
+    </div>
+</div>
+
+<script>
+// Load users from localStorage
+let users = JSON.parse(localStorage.getItem('users')) || [];
+
+// Save users to localStorage
+function saveUsers(){ localStorage.setItem('users', JSON.stringify(users)); }
+
+// Open/Close Modals
+function openSignup(){ document.getElementById('signupModal').classList.add('active'); }
+function closeSignup(){ document.getElementById('signupModal').classList.remove('active'); }
+function openLogin(){ document.getElementById('loginModal').classList.add('active'); }
+function closeLogin(){ document.getElementById('loginModal').classList.remove('active'); }
+
+// Sign Up Function
+function signupUser(){
+    const name = document.getElementById('signupName').value.trim();
+    const email = document.getElementById('signupEmail').value.trim();
+    const phone = document.getElementById('signupPhone').value.trim();
+    const username = document.getElementById('signupUsername').value.trim();
+    const password = document.getElementById('signupPassword').value.trim();
+    const role = document.getElementById('signupRole').value;
+
+    if(!name || !email || !phone || !username || !password || !role){
+        alert('Please fill all fields!');
+        return;
+    }
+
+    if(users.find(u=>u.username===username && u.role===role)){
+        alert('Username already exists for this role!');
+        return;
+    }
+
+    const newUser = { name, email, phone, username, password, role };
+    users.push(newUser);
+    saveUsers();
+    alert('Sign Up successful! You can now log in.');
+    closeSignup();
+}
+
+// Login Function
+function loginUser(){
+    const username = document.getElementById('loginUsername').value.trim();
+    const password = document.getElementById('loginPassword').value.trim();
+
+    if(!username || !password){
+        alert('Please enter username and password');
+        return;
+    }
+
+    const user = users.find(u => u.username===username && u.password===password);
+    if(user){
+        alert('Login successful! Redirecting...');
+        closeLogin();
+
+        // ✅ FIX: Save logged-in user for dashboards to verify
+        localStorage.setItem('loggedInUser', JSON.stringify(user));
+
+        // Redirect based on role
+        if(user.role==='manufacturer'){
+            window.location.href='manufacturer_dashboard.html';
+        } else {
+            window.location.href='retailer_dashboard.html';
+        }
+    } else {
+        alert('Invalid username or password');
+    }
+}
+</script>
+
+</body>
+</html>

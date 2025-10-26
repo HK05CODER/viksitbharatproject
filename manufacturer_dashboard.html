@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Manufacturer Dashboard</title>
+<link rel="stylesheet" href="manufacturer_dashboard.css">
+</head>
+<body>
+<h1>Manufacturer Dashboard</h1>
+
+<!-- Profile picture placeholder -->
+<div class="profile-container">
+    <img src="https://via.placeholder.com/150" alt="Profile Picture" class="profile-pic" id="profilePic">
+    <div class="hover-overlay">Click to Change</div>
+</div>
+
+<div id="userInfo"></div>
+<button onclick="logout()">Logout</button>
+
+<script>
+let user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+if(user && user.role==='manufacturer'){
+    document.getElementById('userInfo').innerHTML = `
+        <p>Name: ${user.name}</p>
+        <p>Email: ${user.email}</p>
+        <p>Phone: ${user.phone}</p>
+        <p>Username: ${user.username}</p>
+        <p>Role: ${user.role.charAt(0).toUpperCase()+user.role.slice(1)}</p>
+    `;
+} else {
+    alert('Access denied! Redirecting to login...');
+    window.location.href='index.html';
+}
+
+function logout(){
+    localStorage.removeItem('loggedInUser');
+    window.location.href='index.html';
+}
+
+// Future profile picture update feature
+document.getElementById('profilePic').addEventListener('click', function(){
+    alert('This feature can be added to update your profile picture!');
+});
+</script>
+</body>
+</html>

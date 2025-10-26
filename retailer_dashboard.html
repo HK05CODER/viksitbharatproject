@@ -1,0 +1,44 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Retailer Dashboard</title>
+<style>
+body { font-family:'Poppins',sans-serif; display:flex; flex-direction:column; justify-content:center; align-items:center; height:100vh; background:linear-gradient(135deg,#43cea2,#185a9d); color:#fff; }
+h1 { font-size:2.5rem; margin-bottom:20px; }
+p { font-size:1.2rem; margin-bottom:10px; }
+button { margin-top:20px; padding:10px 20px; border:none; border-radius:8px; cursor:pointer; background:#43cea2; color:#fff; font-size:1rem; }
+button:hover { background:#185a9d; }
+</style>
+</head>
+<body>
+<h1>Retailer Dashboard</h1>
+<div id="userInfo"></div>
+<button onclick="logout()">Logout</button>
+
+<script>
+// Get logged-in user from localStorage
+let user = JSON.parse(localStorage.getItem('loggedInUser'));
+
+if(user && user.role==='retailer'){
+    document.getElementById('userInfo').innerHTML = `
+        <p>Name: ${user.name}</p>
+        <p>Email: ${user.email}</p>
+        <p>Phone: ${user.phone}</p>
+        <p>Username: ${user.username}</p>
+        <p>Role: ${user.role.charAt(0).toUpperCase()+user.role.slice(1)}</p>
+    `;
+} else {
+    // No user logged in or wrong role
+    alert('Access denied! Redirecting to login...');
+    window.location.href='index.html';
+}
+
+function logout(){
+    localStorage.removeItem('loggedInUser');
+    window.location.href='index.html';
+}
+</script>
+</body>
+</html>
